@@ -10,7 +10,7 @@ void main(){
 
 Future<Album> fetchAlbum() async {
   final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/users/3/posts'));
+      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
 
   if (response.statusCode == 200) {
     return Album.fromJson(jsonDecode(response.body));
@@ -22,22 +22,22 @@ Future<Album> fetchAlbum() async {
 
 
   class Album {
-    final String name;
-    final String userid;
-    final String email;
+    final int userid;
+    final int id;
+    final String title;
 
 
     Album({
-      required this.name,
       required this.userid,
-      required this.email,
+      required this.id,
+      required this.title,
     });
 
     factory Album.fromJson(Map<String, dynamic> json) {
       return Album(
-          name:  json['name'],
-          userid: json['userid'],
-          email: json['email'],);
+          userid:  json['userid'],
+          id: json['id'],
+          title: json['title'],);
     }
  }
 
@@ -68,20 +68,20 @@ Future<Album> fetchAlbum() async {
          body: Center(
            child: FutureBuilder<Album>(
              future: futureAlbum,
-             builder: (context, snapahot) {
-               if (snapahot.connectionState == ConnectionState.done) {
-                 if (snapahot.hasData) {
+             builder: (context, snapshot) {
+               if (snapshot.connectionState == ConnectionState.done) {
+                 if (snapshot.hasData) {
                    return Column(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                   Text(snapahot.data! .name),
-               Text(snapahot.data! .userid),
-               Text(snapahot.data! .email),
+                   Text(snapshot.data!.userid.toString()),
+                   Text(snapshot.data!.id.toString()),
+                   Text(snapshot.data!.title),
                ],
                );
 
-               } else if (snapahot.hasError){
-               return Text('${snapahot.error}');
+               } else if (snapshot.hasError){
+               return Text('${snapshot.error}');
                }
              }
                return CircularProgressIndicator();
